@@ -32,6 +32,23 @@ class UserService {
     const data = await repository.save(user);
     return { data };
   }
+
+  async findOne(_id: string): Promise<DataResponse> {
+    const repository = getMongoRepository(User);
+    const user = await repository.findOne(_id);
+
+    if (!user) {
+      const error = {
+        code: 'USER_NOT_FOUND',
+        message: 'Usuário não encontrado',
+        status: 404,
+      };
+
+      return { error };
+    }
+
+    return { data: user };
+  }
 }
 
 export default new UserService();

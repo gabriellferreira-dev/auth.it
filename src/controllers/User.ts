@@ -13,5 +13,20 @@ export const create = async (
     return res.status(status).json({ error: rest });
   }
 
-  return res.status(201).json({ data });
+  return res.status(201).json(data);
+};
+
+export const findOne = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const { id } = req.params;
+  const { error, data } = await User.findOne(id);
+
+  if (error) {
+    const { status, ...rest } = error;
+    return res.status(status).json({ error: rest });
+  }
+
+  return res.status(200).json(data);
 };
