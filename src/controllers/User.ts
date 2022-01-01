@@ -40,3 +40,18 @@ export const update = async (
 
   return res.status(200).json(data);
 };
+
+export const deleteOne = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const { id } = req.params;
+  const { error, data } = await User.delete(id);
+
+  if (error) {
+    const { status, ...rest } = error;
+    return res.status(status).json({ error: rest });
+  }
+
+  return res.status(200).json(data);
+};

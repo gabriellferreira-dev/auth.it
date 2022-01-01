@@ -73,6 +73,26 @@ class UserService {
 
     return { data: user };
   }
+
+  async delete(_id: string): Promise<DataResponse> {
+    const repository = getMongoRepository(User);
+    const user = await this.findOne(_id);
+
+    if (!user) {
+      const error = {
+        code: 'USER_NOT_FOUND',
+        message: 'Usuário não encontrado',
+        status: 404,
+      };
+
+      return { error };
+    }
+
+    await repository.deleteOne({
+      _id: ObjectId(_id),
+    });
+    return user;
+  }
 }
 
 export default new UserService();
