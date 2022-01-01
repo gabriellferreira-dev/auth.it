@@ -10,9 +10,10 @@ module.exports = {
   useUnifiedTopology: true,
   ssl: true,
   authSource: 'admin',
-  entities: ['src/models/*.ts'],
-  migrations: ['src/database/migrations/*.ts'],
-  cli: {
-    migrationsDir: 'src/database/migrations/*.ts',
+  connectTimeoutMS: 10000,
+  poolSize: 10,
+  writeConcern: {
+    j: true,
   },
+  entities: ['src/database/models/*.ts'],
 };
