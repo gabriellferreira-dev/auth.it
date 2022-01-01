@@ -1,4 +1,7 @@
 import { getMongoRepository } from 'typeorm';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ObjectId = require('mongodb').ObjectId;
+
 import User from '../database/models/User';
 
 export interface CustomError {
@@ -46,6 +49,27 @@ class UserService {
 
       return { error };
     }
+
+    return { data: user };
+  }
+
+  async update(
+    _id: string,
+    data: Record<string, string>,
+  ): Promise<DataResponse> {
+    const repository = getMongoRepository(User);
+    await repository.updateOne(
+      {
+        _id: ObjectId(_id),
+      },
+      {
+        $set: {
+          ...data,
+        },
+      },
+    );
+
+    const user = await repository.findOne(_id);
 
     return { data: user };
   }

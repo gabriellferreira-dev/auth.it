@@ -30,3 +30,13 @@ export const findOne = async (
 
   return res.status(200).json(data);
 };
+
+export const update = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const { id } = req.params;
+  const { data } = await User.update(id, req.body);
+
+  return res.status(200).json(data);
+};
