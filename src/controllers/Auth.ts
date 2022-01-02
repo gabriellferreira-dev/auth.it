@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: __dirname + '/.env' });
 
 import bcrypt from 'bcryptjs';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 import UserService from '../services/User';
