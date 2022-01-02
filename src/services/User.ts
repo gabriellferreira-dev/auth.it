@@ -10,8 +10,12 @@ export interface CustomError {
   status: number;
 }
 
-interface DataResponse {
-  data?: User;
+interface IUser extends Omit<User, 'password'> {
+  password?: string;
+}
+
+export interface DataResponse {
+  data?: IUser;
   error?: CustomError;
 }
 
@@ -32,8 +36,11 @@ class UserService {
       return { error };
     }
 
-    const data = await repository.save(user);
-    return { data };
+    const data = repository.create(user);
+
+    const response = await repository.save(data);
+
+    return { data: response };
   }
 
   async findOne(_id: string): Promise<DataResponse> {
@@ -53,25 +60,35 @@ class UserService {
     return { data: user };
   }
 
+  async findByEmail(email: string): Promise<DataResponse> {
+    const repository = getMongoRepository(User);
+    const user = await repository.findOne({ where: { email } });
+
+    if (!user) {
+      const error = {
+        code: 'USER_NOT_FOUND',
+        message: 'Usuário não encontrado',
+        status: 404,
+      };
+
+      return { error };
+    }
+
+    return { data: user };
+  }
+
   async update(
     _id: string,
     data: Record<string, string>,
   ): Promise<DataResponse> {
     const repository = getMongoRepository(User);
-    await repository.updateOne(
-      {
-        _id: ObjectId(_id),
-      },
-      {
-        $set: {
-          ...data,
-        },
-      },
-    );
 
     const user = await repository.findOne(_id);
+    const updated = Object.assign(user, data);
 
-    return { data: user };
+    const response = await repository.save(updated);
+
+    return { data: response };
   }
 
   async delete(_id: string): Promise<DataResponse> {
