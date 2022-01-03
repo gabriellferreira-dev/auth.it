@@ -1,5 +1,7 @@
 import { createConnection } from 'typeorm';
 
-createConnection().then(() =>
+const connection = createConnection().then(() =>
   console.log('💻 Successfully connected with database'),
 );
+
+export default connection;
